@@ -1,0 +1,4 @@
+- code review
+- are the autotools used correctly?
+- do we need pcap_breakloop in l2trace?
+- implement a configuration file for dot1ag_ccd

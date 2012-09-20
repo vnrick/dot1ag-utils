@@ -1,0 +1,105 @@
+INTRODUCTION
+------------
+The IEEE 802.1ag standard is a set of protocols for Ethernet OAM
+(Operations, Administration, and Management). The dot1ag-utils software
+package is an Open Source (new BSD License) implementation of the
+IEEE 802.1ag protocol and is supported on Arista Networks switches and
+Linux, FreeBSD and MacOSX servers. It provides several debugging tools
+that interact with IEEE 802.1ag enabled routers and switches. The package
+implements a loopback message initiator (ethping), a link trace message
+initiator (ethtrace) and a daemon (dot1agd) that responds to loopback
+messages and link trace messages. Sending and receiving of continuity
+check messages is implemented in the dot1ag_ccd daemon.
+
+Currently, the dot1ag-utils implement the Down MEP functionality only.
+The main focus at the moment is a setup where the dot1ag-utils are
+run on an interface of a server which is connected to an Ethernet switch.
+
+USE CASES
+---------
+
+(1) Ping and trace to Ethernet MAC addresses from a server.
+
+                                                    MIP
+                                              00:14:0d:0b:10:c4   MEP
+                                                      |    00:1b:c0:97:38:c6
+                                                      |                | 
+                                                      V                V
++--------+       +--------+     +----------------+    +----------------+
+| server +-------+ switch +-----+ 802.1ag switch +----+ 802.1ag switch |
++--------+       +--------+     +----------------+    +----------------+
+
+server# ethping -ieth5 -v123 -l7 -c5 00:14:0d:0b:10:c4
+Sending CFM LBM to 00:14:0d:0b:10:c4
+64 bytes from 00:14:0d:0b:10:c4, sequence 209175278, 4.256 ms
+64 bytes from 00:14:0d:0b:10:c4, sequence 209175279, 0.410 ms
+64 bytes from 00:14:0d:0b:10:c4, sequence 209175280, 0.412 ms
+64 bytes from 00:14:0d:0b:10:c4, sequence 209175281, 0.410 ms
+64 bytes from 00:14:0d:0b:10:c4, sequence 209175282, 0.440 ms
+
+
+server# ethtrace -i eth5 -v 123 -l7 00:1b:c0:97:38:c6
+Sending CFM LTM probe to 00:1b:c0:97:38:c6
+ttl 1: LTM with id 284917984
+	reply from 00:14:0d:0b:10:c1, id=284917984, ttl=0, RlyFDB
+ttl 2: LTM with id 284917985
+	reply from 00:14:0d:0b:10:c1, id=284917985, ttl=1, RlyFDB
+	reply from 00:14:0d:0b:10:c4, id=284917985, ttl=0, RlyFDB
+ttl 3: LTM with id 284917986
+	reply from 00:14:0d:0b:10:c1, id=284917986, ttl=2, RlyFDB
+	reply from 00:14:0d:0b:10:c4, id=284917986, ttl=1, RlyFDB
+	reply from 00:1b:c0:97:38:c6, id=284917986, ttl=0, RlyHit
+
+-----------------------------------------
+
+(2) Connect a server to a switch and let the server respond to
+Ethernet ping and trace messages.
+
+                                   dot1agd
+                                  +--------+
+                                  | server |
+                                  +---+----+
+                                      | v1
+   v1    +----------------+  v1   +---+----+  v1   +----------------+
+---------+ 802.1ag switch +-------+ switch +-------+ 802.1ag switch +-----
+         +----------------+       +--------+       +----------------+
+
+The server is connected to the middle switch on VLAN v1. It can interact
+with IEEE 802.1ag enabled switches. So you can L2 ping and trace to the
+middle server (the server will respond) even though the switch does not
+support 802.1ag itself.
+
+When you also run the dot1ag_ccd daemon on the server, this setup can
+send and receive continuity check messages too.
+
+The advantage is that the server is connected to the switch at
+L2 only. It does not need an IP address. So the security risk
+is minimal. The server cannot be hacked via IP protocols.
+
+
+SUPPORTED PLATFORMS
+-------------------
+The 8021ag-utils have been tested on:
+Arista Networks EOS 4.7.3
+CentOS 5.6
+FreeBSD 8.x
+MacOSX 10.6.7, 10.7
+NetBSD
+Ubuntu 10.04.2 LTS
+
+Interoperability tests have been done with:
+Actelis
+Alcatel
+Cisco C3750-ME 12.2(55)SE
+Juniper T1600 JUNOS 10.3I
+Nortel MERS 8600 6.0.4.0OE
+
+CONTACT INFORMATION
+-------------------
+Please send questions, bugs, patches, etc to rvdp@sara.nl or nrg@sara.nl.
+
+You can also join the mailman mailing list:
+https://horus.sara.nl/mailman/listinfo/dot1ag-utils
+
+The dot1ag-utils can be downloaded from:
+http://nrg.sara.nl/dot1ag-utils

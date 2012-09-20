@@ -1,0 +1,60 @@
+DOT1AGUTILS RELEASE NOTES
+=========================
+
+1.0.1
+-----
+- cfm_ccm_receiver fix: VLAN check
+- select(2) fixes in dot1ag_ccd.c
+- dot1ag_ccd.c fix: check for pcap_open_live == NULL
+- dot1ag_ccd.c fix: check for ETYPE_8021Q type in tagged traffic
+- dot1ag_ccd.c: use leading zeros in Ethernet addresses in syslog output
+- fixed timer bug in dot1ag_ccd.c
+- added verbose flag in dot1ag_ccd.c
+
+1.0.0
+-----
+- added port and interface status to dot1ag_ccd syslog messages
+
+1.0.0-RC2
+---------
+- added optional command line option -f to set syslog facility
+
+1.0.0-RC1
+---------
+- bug fix: compile error on MacOSX (fix by Xin Xu)
+- docs updated
+- small cleanups
+
+1.0.0-BETA2
+-----------
+- bug fix: packets < ETHER_MIN_LEN were sent
+- bug fix: error handling in get_local_mac()
+- dot1ag_ccd: CCM send and receive implemented 
+- dot1ag_ccd: log UP, DOWN and INFO about status of MEPs to syslog
+
+1.0.0-BETA1
+------------
+- support for various Ethernet MAC address formats in ethping and ethtrace 
+  (thanks to Christophe Fillot)
+- support for untagged frames added (thanks to Christophe Fillot)
+- various bug fixes (thanks to Christophe Fillot)
+
+1.0.0-ALPHA3
+------------
+- renamed l2ping to ethping to avoid name clash with bluetooth l2ping
+- renamed l2trace to ethtrace
+- support for NetBSD added (thanks to Akira Kato)
+- support for Arista Networks switches added
+
+1.0.0-ALPHA2 (2011/05/13)
+---------------------------------------
+- added a note in the INSTALL file that the pcap library and header files
+  are needed
+- code cleanups
+- dot1agd prints more info about received continuity check messages
+- dot1agd loopback responder uses received LBM message as basis for reply
+- dot1agd loopback responder can now handle both tagged and untagged frames
+
+1.0.0-ALPHA1 (2011/05/04)
+-------------------------
+This is the first public release of the dot1ag-utils.

@@ -1,0 +1,41 @@
+The dot1ag-utils package consists of the following source files:
+
+src/ieee8021ag.c:
+Implements IEEE 802.1ag specific stuff.
+
+src/dot1ag_eth.c
+Implements access to Ethernet interfaces (information, read/write frames, etc).
+
+src/ethping.c:
+Implements sending of Loopback Messages (LBM).
+
+src/ethtrace.c:
+Implements sending of Link Trace Messages (LTM).
+
+src/dot1agd.c:
+Implements replying to Loopback Messages (LBM) with a Loopback Reply (LBR)
+frame, and replying to Link Trace Messages (LTM) with a Link Trace Reply (LTR)
+frame.
+
+src/dot1ag_ccd:
+Implements sending of Continuity Check Messages (CCM). It also receives
+CCM frames in its Maintenance Domain and Maintenance Association.
+
+REQUIREMENTS
+------------
+Most of the code uses the Standard C Library (libc, -lc), but there
+are a few platform dependent functions.
+
+Getting the local MAC address of an interface is done with getifaddrs(3)
+on FreeBSD and MacOSX and with a SIOCGIFHWADDR ioctl(2) on Linux. These
+are implemented with get_local_mac() in src/dot1ag_eth.c.
+
+Receiving frames is done with the Packet Capture library (PCAP). A pcap
+filter is used to receive frames with Ethertype CFM (0x8902) only.
+
+Sending of frames is done by writing to a Berkeley Packet Filter (bpf)
+device on FreeBSD or MacOSX and using a raw Ethernet socket (SOCK_RAW)
+on Linux. FreeBSD implement bpf as a cloned interface (/dev/bpf).
+On MacOSX there are several bpf interfaces (/dev/bpf0, /dev/bpf1,
+/dev/bpf2, /dev/bpf3). All are tried in sequence until a free bpf
+interface is found.

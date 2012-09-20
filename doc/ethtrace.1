@@ -1,0 +1,42 @@
+.TH "DOT1AG-UTILS" "1" "February 14, 2012" "" "dot1ag-utils 1.0.1"
+.\" Copyright (c) 2011. All rights reserved.
+.\" See LICENSE for the license.
+.SH "NAME"
+.LP
+.B ethtrace
+\- send IEEE 802.1ag LTM PDUs
+.SH "SYNOPSIS"
+.LP
+.B ethtrace
+.RB \-i
+.IR interface
+.RB [ \-v
+.IR vid ]
+.RB [ \-l
+.IR mdlevel ]
+.IR mac-address
+.SH "DESCRIPTION"
+.LP
+.B ethtrace
+is an initiator of Link Trace Messages (LTM). It can send either
+tagged or untagged frames, depending on whether the \-v flag
+is given.
+.SH "OPTIONS"
+.LP
+.TP
+.B \-i\fI interface
+Interface name to receive from and sent to, e.g.
+.IR eth0 .
+.TP
+.B \-v\fI vid
+Use this IEEE 802.1Q VLAN tag in frames sent and received. If no
+\-v parameter is given, untagged frames are sent and received.
+.TP
+.B \-l\fI mdlevel
+IEEE 802.1ag Maintenance Domain Level.
+.TP
+.B mac-address
+The LTM is sent to this MAC address.
+.SH "SEE ALSO"
+.LP
+ethping(1), dot1agd(8), dot1ag_ccd(8)

@@ -1,0 +1,28 @@
+.TH "DOT1AG-UTILS" "8" "February 14, 2012" "" "dot1ag-utils 1.0.1"
+.\" Copyright (c) 2011. All rights reserved.
+.\" See LICENSE for the license.
+.SH "NAME"
+.LP
+.B dot1agd
+\- daemon that responds to IEEE 802.1ag LBM and LTM PDUs
+.SH "SYNOPSIS"
+.LP
+.B dot1agd
+.RB \-i
+.IR interface
+.SH "DESCRIPTION"
+.LP
+.B dot1agd
+implements an LBM and LTM responder. It acts as a MEP. It responds to
+all LBM and LTM PDUs, regardless of Maintenance Domain Level or
+VLAN tag. Responses are sent to the same Maintenance Domain Level
+and VLAN as the incoming LBM or LTM.
+.SH "OPTIONS"
+.LP
+.TP
+.B \-i\fI interface
+Interface name to receive from, e.g.
+.IR eth0 .
+.SH "SEE ALSO"
+.LP
+ethping(1), ethtrace(1), dot1ag_ccd(8)

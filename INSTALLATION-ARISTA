@@ -1,0 +1,7 @@
+Please send mail to rvdp@sara.nl.
+
+The main points are:
+- compile on 32 bit Linux
+- statically link libpcap.a, e.g.
+  gcc -Wall -Werror -ggdb -g -O2 -o ethtrace ethtrace.o \
+		ieee8021ag.o dot1ag_eth.o /usr/lib/libpcap.a

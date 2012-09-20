@@ -1,0 +1,74 @@
+Compiling can be done without root privileges.
+
+Linux requirements
+------------------
+The pcap library and header files are needed. If not present, install them:
+$ sudo apt-get install libpcap-dev
+
+STEP 1
+------
+Unpack the package with:
+$ tar xvzf dot1ag-utils-1.0.0.tar.gz
+This creates a directory 'dot1ag-utils-1.0.0' and extracts
+the software in it.
+
+STEP 2
+------
+Run the configure script:
+$ sh configure
+
+STEP 3
+------
+Run make:
+$ make
+
+The binaries are in the 'src' directory, e.g.:
+dot1ag-utils-1.0.0/src/ethping
+dot1ag-utils-1.0.0/src/ethtrace
+dot1ag-utils-1.0.0/src/dot1agd
+dot1ag-utils-1.0.0/src/dot1ag_ccd
+
+LINUX SPECIFIC CONFIGURATION
+----------------------------
+On Linux you need to install the '8021q' kernel module. On
+Ubuntu, Debian, etc you can install it with:
+# apt-get install vlan
+# modprobe 8021q
+
+With 'lsmod' you can check if the 8021q module is loaded
+correctly.
+
+A VLAN interface can be setup with:
+# vconfig add eth0 123
+This creates eth0.123, a VLAN interface with tag 123.
+
+RUNNING THE TOOLS
+-----------------
+You need to have root priviliges to run the tools. On Linux,
+the daemons dot1agd and dot1ag_ccd should use the "main"
+interface, i.e. eth0 instead of eth0.123. The '-v' flag
+determines which VLAN ID is used (if no '-v' flag is
+given, untagged frames are sent).
+
+EXAMPLES
+--------
+# ethping -ieth0 -v123 -l7 -c3 00:1b:c0:97:38:c6
+Sending CFM LBM to 00:1b:c0:97:38:c6
+68 bytes from 00:1b:c0:97:38:c6, sequence 909165003, 4.476 ms
+68 bytes from 00:1b:c0:97:38:c6, sequence 909165004, 1.715 ms
+68 bytes from 00:1b:c0:97:38:c6, sequence 909165005, 0.686 ms
+
+# ethtrace -i eth0 -v 123 -l7 00:1b:c0:97:38:c6
+Sending CFM LTM probe to 00:1b:c0:97:38:c6
+ttl 1: LTM with id 1352085726
+	reply from 00:14:0d:0b:10:c1, id=1352085726, ttl=0, RlyFDB
+ttl 2: LTM with id 1352085727
+	reply from 00:14:0d:0b:10:c1, id=1352085727, ttl=1, RlyFDB
+	reply from 00:14:0d:0b:10:c4, id=1352085727, ttl=0, RlyFDB
+ttl 3: LTM with id 1352085728
+	reply from 00:14:0d:0b:10:c1, id=1352085728, ttl=2, RlyFDB
+	reply from 00:14:0d:0b:10:c4, id=1352085728, ttl=1, RlyFDB
+	reply from 00:1b:c0:97:38:c6, id=1352085728, ttl=0, RlyHit
+
+# dot1ag_ccd -i eth5 -t 1000 -d testdomain -m 3 -a testing -v 123 -l 7
+

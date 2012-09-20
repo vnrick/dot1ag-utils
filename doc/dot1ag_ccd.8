@@ -1,0 +1,95 @@
+.TH "DOT1AG-UTILS" "8" "February 14, 2012" "" "dot1ag-utils 1.0.1"
+.\" Copyright (c) 2011. All rights reserved.
+.\" See LICENSE for the license.
+.SH "NAME"
+.LP
+.B dot1ag_ccd
+\- daemon that sends and receives IEEE 802.1ag CCM PDUs
+.SH "SYNOPSIS"
+.LP
+.B dot1ag_ccd
+.RB \-i
+.IR interface
+.RB \-t
+.IR ms-interval
+.RB \-d
+.IR maintenance-domain
+.RB \-m
+.IR MEPID
+.RB \-a
+.IR maintenance-association
+.RB [ \-v
+.IR vid ]
+.RB [ \-l
+.IR mdlevel ]
+.RB [ \-f
+.IR facility ]
+.RB [ \-V ]
+.SH "DESCRIPTION"
+.LP
+The
+.B dot1ag_ccd
+daemon implements sending and receiving of Continuity Check Messages (CCM).
+It acts as a down MEP. It only responds to CCMs in its own
+regardless of Maintenance Domain Level, Maintenance Domain Name and
+Maintenance Association. If no \-v flag is given, untagged frames
+are sent.
+.LP
+When three consecutive CCM PDUs are lost from a remote MEP, that MEP
+is considered down and a syslog entry with priority LOG_CRIT is
+sent to the given syslog facility. When a CCM PDU is received from
+that MEP again a LOG_INFO syslog message is sent to the given syslog
+facility. When the daemon receives a SIGHUP signal, the UP/DOWN
+status of all active remote MEPs is sent as LOG_INFO syslog
+messages to the given syslog facility. The format of these syslog
+messages is:
+.LP
+mac-address,status,mepid,mdLevel,maintenance_domain,maintenance_association,port_status,interface_status
+.LP
+e.g.:
+.LP
+00:1a:a1:cc:d8:99,UP,37,7,domain7,test,PsUP,isUp
+.SH "OPTIONS"
+.LP
+.TP
+.B \-i\fI interface (string)
+Interface name to receive from, e.g.
+.IR eth0 .
+.TP
+.B \-t\fI CCM interval (number)
+Interval in miliseconds between sent CCM PDUs. Supported values (in ms)
+are 100, 1000, 10000, 60000, 600000.
+.TP
+.B \-d\fI Maintenance Domain Name (string)
+Maintenance Domain Name. Only strings are supported.
+.TP
+.B \-m\fI MEP ID (number)
+Maintenance Association End Point Identifier. Number in the range
+1-8191. All MEPs in the maintenance association should have a
+unique ID.
+.TP
+.B \-a\fI Maintenance Association (string)
+Maintenance Association. Only strings are supported.
+.TP
+.B \-v\fI VLAN ID (number)
+Use this IEEE 802.1Q VLAN tag in frames sent. If no
+\-v parameter is given, untagged frames are sent.
+.TP
+.B \-l\fI Maintenance Domain Level (number)
+Maintenance Domain Level (0-7). If this flag is absent, MD Level 0
+will be used.
+.TP
+.B \-f\fI syslog facility (string)
+Syslog facility for MEP status messages. Supported facilities are
+LOG_KERN, LOG_USER, LOG_MAIL, LOG_NEWS, LOG_UUCP, LOG_DAEMON,
+LOG_AUTH, LOG_CRON, LOG_LPR, LOG_LOCAL0, LOG_LOCAL1, LOG_LOCAL2,
+LOG_LOCAL3, LOG_LOCAL4, LOG_LOCAL5, LOG_LOCAL6, LOG_LOCAL7. These
+strings can be given as either upper or lower case. The LOG_ prefix
+may be ommited, so "daemon" is acceptable too.
+The default facility is LOG_DAEMON.
+.TP
+.B \-V verbose
+Print information about received CCM PDUs on stderr.
+.SH "SEE ALSO"
+.LP
+ethping(1), ethtrace(1), dot1agd(8)
